@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SamirCoEvPower - EV Charging Solutions</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- LeafletJS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Google Fonts: Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Tailwind Config & CSS -->
+    <style type="text/tailwindcss">
+        @layer base {
+            html {
+                font-family: 'Inter', sans-serif;
+                scroll-behavior: smooth;
+            }
+        }
+    </style>
+     <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#2563EB',
+                        'accent-blue': '#60A5FA',
+                        'dark-navy': '#0F1724',
+                    },
+                    fontFamily: {
+                        'logo': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-dark-navy">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#home" class="page-link flex items-center">
+                    <span class="text-2xl font-bold text-dark-navy font-logo">SAMIRCO<span class="text-primary-blue">EVPOWER</span></span>
+                </a>
+                
+                <nav class="hidden lg:flex items-center space-x-8">
+                    <a href="#home" class="page-link nav-link text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Home</a>
+                    <a href="#stations" class="page-link nav-link text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Stations</a>
+                    <a href="#pricing" class="page-link nav-link text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Pricing</a>
+                    <a href="#about" class="page-link nav-link text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">About</a>
+                    <a href="#contact" class="page-link nav-link text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Contact</a>
+                </nav>
+
+                <div class="hidden lg:flex items-center space-x-4">
+                     <a href="#stations" class="page-link px-5 py-2.5 text-sm font-medium text-dark-navy bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-300">Find a Charger</a>
+                </div>
+
+                <button id="mobile-menu-button" class="lg:hidden text-dark-navy">
+                    <i data-lucide="menu" class="h-6 w-6"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                 <a href="#home" class="page-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-primary-blue">Home</a>
+                 <a href="#stations" class="page-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-primary-blue">Stations</a>
+                 <a href="#pricing" class="page-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-primary-blue">Pricing</a>
+                 <a href="#about" class="page-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-primary-blue">About</a>
+                 <a href="#contact" class="page-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-primary-blue">Contact</a>
+            </div>
+             <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="px-5">
+                    <a href="#stations" class="page-link w-full block text-center px-5 py-2.5 text-sm font-medium text-dark-navy bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-300">Find a Charger</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <!-- Home Page -->
+        <section id="home" class="page-section">
+            <div class="relative bg-dark-navy overflow-hidden">
+                <div class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1617886322207-6f504e7472c5?q=80&w=2970&auto=format&fit=crop" alt="EV Charging Station at night" class="w-full h-full object-cover opacity-30">
+                </div>
+                <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-48 text-center text-white">
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                        <span class="block font-logo">SAMIRCO<span class="text-primary-blue">EVPOWER</span></span>
+                        <span class="block text-accent-blue mt-2">Clean. Fast. Local EV Charging.</span>
+                    </h1>
+                    <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-300">
+                        Powering your journey with a reliable, nationwide network of fast and sustainable charging stations.
+                    </p>
+                    <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                        <a href="#stations" class="page-link w-full sm:w-auto inline-block bg-primary-blue text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300">
+                            Find a Charger
+                        </a>
+                        <a href="#contact" class="page-link w-full sm:w-auto inline-block bg-accent-blue text-dark-navy font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300">
+                            Partner With Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Features Section -->
+             <div class="py-16 sm:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center">
+                        <h2 class="text-base font-semibold text-primary-blue tracking-wide uppercase">Why Choose Us</h2>
+                        <p class="mt-2 text-3xl font-extrabold text-dark-navy sm:text-4xl">The Future of Driving is Electric</p>
+                    </div>
+                    <div class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                         <div class="text-center p-8 border border-gray-200 rounded-xl hover:shadow-xl transition-shadow duration-300">
+                           <div class="flex items-center justify-center h-16 w-16 rounded-full bg-primary-blue/10 text-primary-blue mx-auto">
+                                <i data-lucide="zap" class="h-8 w-8"></i>
+                           </div>
+                            <h3 class="mt-6 text-xl font-bold text-dark-navy">Ultra-Fast Charging</h3>
+                            <p class="mt-2 text-base text-gray-500">Our Level 3 DC fast chargers get you back on the road in minutes.</p>
+                        </div>
+                        <div class="text-center p-8 border border-gray-200 rounded-xl hover:shadow-xl transition-shadow duration-300">
+                            <div class="flex items-center justify-center h-16 w-16 rounded-full bg-primary-blue/10 text-primary-blue mx-auto">
+                                <i data-lucide="map-pin" class="h-8 w-8"></i>
+                           </div>
+                            <h3 class="mt-6 text-xl font-bold text-dark-navy">Convenient Locations</h3>
+                            <p class="mt-2 text-base text-gray-500">Find our stations at shopping centers, highways, and workplaces.</p>
+                        </div>
+                        <div class="text-center p-8 border border-gray-200 rounded-xl hover:shadow-xl transition-shadow duration-300">
+                           <div class="flex items-center justify-center h-16 w-16 rounded-full bg-primary-blue/10 text-primary-blue mx-auto">
+                                <i data-lucide="leaf" class="h-8 w-8"></i>
+                           </div>
+                            <h3 class="mt-6 text-xl font-bold text-dark-navy">100% Green Energy</h3>
+                            <p class="mt-2 text-base text-gray-500">We power our network with renewable energy for a zero-emission drive.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stations Page -->
+        <section id="stations" class="page-section hidden py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-extrabold text-dark-navy sm:text-5xl">Our Charging Network</h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Find a SAMIRCOEVPOWER station near you.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 rounded-lg shadow-lg overflow-hidden z-10 h-[400px] lg:h-auto" id="map"></div>
+                    <div class="lg:col-span-1">
+                        <h2 class="text-2xl font-bold mb-4">Station List</h2>
+                        <div id="station-list" class="space-y-4 max-h-[400px] lg:max-h-full overflow-y-auto pr-2">
+                           <!-- Station items will be injected here by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Page -->
+        <section id="pricing" class="page-section hidden py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-extrabold text-dark-navy sm:text-5xl">Simple, Transparent Pricing</h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Choose the plan that's right for you. No hidden fees, ever.</p>
+                </div>
+                <div class="mt-12 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-x-8 max-w-4xl mx-auto">
+                    <!-- Pay As You Go Plan -->
+                    <div class="relative p-8 bg-slate-50 border-2 border-primary-blue rounded-2xl shadow-sm flex flex-col">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-dark-navy">Pay As You Go</h3>
+                            <p class="mt-4 flex items-baseline text-dark-navy"><span class="text-5xl font-extrabold tracking-tight">$0.45</span><span class="ml-1 text-xl font-semibold">/kWh</span></p>
+                            <p class="mt-6 text-gray-500">Perfect for occasional drivers.</p>
+                            <ul role="list" class="mt-6 space-y-4">
+                                <li class="flex"><i data-lucide="check" class="flex-shrink-0 w-6 h-6 text-primary-blue"></i><span class="ml-3 text-gray-500">Access to all stations</span></li>
+                            </ul>
+                        </div>
+                        <a href="#contact" class="page-link bg-primary-blue text-white hover:bg-opacity-90 mt-8 block w-full py-3 px-6 border border-transparent rounded-md text-center font-medium">Get Started</a>
+                    </div>
+                    <!-- Subscription Plan -->
+                    <div class="relative p-8 bg-dark-navy rounded-2xl shadow-xl flex flex-col">
+                        <div class="absolute top-0 right-0 pt-3 pr-3"><span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent-blue text-dark-navy">Most Popular</span></div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold text-white">Power Plus Subscription</h3>
+                            <p class="mt-4 flex items-baseline text-white"><span class="text-5xl font-extrabold tracking-tight">$12.99</span><span class="ml-1 text-xl font-semibold">/month</span></p>
+                            <p class="mt-6 text-gray-300">Unlock lower rates and benefits.</p>
+                            <ul role="list" class="mt-6 space-y-4">
+                                <li class="flex"><i data-lucide="check" class="flex-shrink-0 w-6 h-6 text-accent-blue"></i><span class="ml-3 text-gray-300">Discounted rate: <span class="font-bold">$0.35/kWh</span></span></li>
+                                <li class="flex"><i data-lucide="check" class="flex-shrink-0 w-6 h-6 text-accent-blue"></i><span class="ml-3 text-gray-300">Reserve chargers in advance</span></li>
+                            </ul>
+                        </div>
+                        <a href="#contact" class="page-link bg-accent-blue text-dark-navy hover:bg-opacity-90 mt-8 block w-full py-3 px-6 border border-transparent rounded-md text-center font-medium">Sign Up Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about" class="page-section hidden py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                 <div class="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+                    <div>
+                        <h1 class="text-4xl font-extrabold text-dark-navy sm:text-5xl">About SAMIRCOEVPOWER</h1>
+                        <p class="mt-4 text-xl text-gray-500">Our mission is to accelerate the transition to sustainable transportation.</p>
+                        <p class="mt-6 text-gray-600">Founded in 2022, SAMIRCOEVPOWER was born from a passion for technology and a commitment to the planet. We believe that driving an electric vehicle should be easy and accessible. That's why we're building a future where you can power up wherever you live, work, and play, all while using 100% renewable energy.</p>
+                    </div>
+                    <div class="mt-10 lg:mt-0">
+                        <img src="https://images.unsplash.com/photo-1508898578281-774ac48935f1?q=80&w=1974&auto=format&fit=crop" onerror="this.onerror=null;this.src='https://placehold.co/600x400/2563EB/white?text=Clean+Energy';" alt="Wind turbines powering a clean future" class="rounded-lg shadow-xl">
+                    </div>
+                </div>
+                 <!-- A Message from our Founder Section -->
+                <div class="mt-24 bg-white p-8 md:p-12 rounded-2xl shadow-lg border">
+                    <div class="md:grid md:grid-cols-2 md:gap-12 md:items-center">
+                        <div class="md:col-span-1">
+                            <img class="rounded-lg shadow-xl w-full h-auto object-cover" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBYWFRgWFhYZGRgaHBwcHBwGBBwcHBwcHBwaHBwcHBwcIS4lHB4rHxwaJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHhISHzQrISs0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NP/AABEIALcBEwMBIgACEQEDEQH/xAAcAAACAwEBAQEAAAAAAAAAAAAAAwECBAUGBwj/xABFEAACAQIEAwQGBwQJAwUAAAABAgADEQQSITEFQVEGImFxgRMykaGxQlKSwdEHFTNicoKS4fCCohZDshc0U2Nzo8Lx/8QAGgEAAgMBAQAAAAAAAAAAAAAAAAECAwQFBv/EAC8RAAICAgAEBQIGAwEAAAAAAAABAgMRBCExEkFRYXEFEyKBkaGxwdHwMuFCUuH/2gAMAwEAAhEDEQA/APcYiVYmISIkQhCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCE-í' alt="Samir Ibrahim, CEO of SamirCoEvPower, with a concept EV and charger">
+                        </div>
+                        <div class="mt-8 md:mt-0 md:col-span-1">
+                            <blockquote class="text-lg text-gray-600 italic border-l-4 border-accent-blue pl-6">
+                                "We're not just building chargers; we're building a cleaner, brighter future. Thank you for being part of this journey with us."
+                            </blockquote>
+                            <p class="mt-6 font-semibold text-dark-navy text-lg">Samir Ibrahim</p>
+                            <p class="text-sm text-gray-500">CEO & Founder, SAMIRCOEVPOWER</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact" class="page-section hidden py-16 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-4xl font-extrabold text-dark-navy sm:text-5xl">Get In Touch</h1>
+                    <p class="mt-4 text-lg text-gray-500">We'd love to hear from you. Whether you're a driver or a business looking to partner, send us a message.</p>
+                </div>
+                <div class="mt-12 max-w-xl mx-auto">
+                    <form id="contact-form" class="space-y-6">
+                        <!-- Form fields -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div><input type="text" name="name" id="name" required class="block w-full rounded-md border-gray-300 shadow-sm p-3" placeholder="Full Name"></div>
+                            <div><input type="email" name="email" id="email" required class="block w-full rounded-md border-gray-300 shadow-sm p-3" placeholder="Email Address"></div>
+                        </div>
+                        <div><textarea name="message" id="message" rows="4" required class="block w-full rounded-md border-gray-300 shadow-sm p-3" placeholder="Your Message"></textarea></div>
+                        <div><button type="submit" class="w-full py-3 px-4 rounded-md shadow-sm text-white bg-primary-blue hover:bg-opacity-90">Send Message</button></div>
+                        <p id="form-status" class="text-center"></p>
+                    </form>
+                </div>
+                <div class="mt-16 text-center text-gray-600">
+                    <h3 class="text-xl font-semibold text-dark-navy">Or reach us directly:</h3>
+                    <p class="mt-4">10350 N Vancouver Way, Portland, OR 97217</p>
+                    <p class="mt-2"><a href="mailto:info@samircoevpower.com" class="text-primary-blue hover:underline">info@samircoevpower.com</a></p>
+                    <p class="mt-2"><a href="tel:+15039992425" class="text-primary-blue hover:underline">(503) 999-2425</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="page-section hidden py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto text-center">
+                     <h1 class="text-4xl font-extrabold text-dark-navy sm:text-5xl">Frequently Asked Questions</h1>
+                </div>
+                 <div class="mt-12 max-w-3xl mx-auto">
+                    <div class="space-y-4">
+                        <details class="p-6 border rounded-lg group">
+                            <summary class="flex items-center justify-between cursor-pointer font-semibold text-lg">How do I start a charging session? <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 group-open:rotate-180"></i></summary>
+                            <p class="mt-4 text-gray-600">You can start a session via our mobile app, by tapping an RFID card, or by using a credit card at the station.</p>
+                        </details>
+                         <details class="p-6 border rounded-lg group">
+                            <summary class="flex items-center justify-between cursor-pointer font-semibold text-lg">How fast are your chargers? <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 group-open:rotate-180"></i></summary>
+                            <p class="mt-4 text-gray-600">Most of our stations are DC Fast Chargers (Level 3), capable of charging a typical EV to 80% in about 20-30 minutes.</p>
+                        </details>
+                        <details class="p-6 border rounded-lg group">
+                            <summary class="flex items-center justify-between cursor-pointer font-semibold text-lg">What types of connectors do you support? <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 group-open:rotate-180"></i></summary>
+                            <p class="mt-4 text-gray-600">Our stations are equipped with CCS and CHAdeMO connectors, compatible with the vast majority of electric vehicles on the road today. Please check your vehicle's specifications to confirm compatibility.</p>
+                        </details>
+                         <details class="p-6 border rounded-lg group">
+                            <summary class="flex items-center justify-between cursor-pointer font-semibold text-lg">Is there an idle fee? <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 group-open:rotate-180"></i></summary>
+                            <p class="mt-4 text-gray-600">Yes, to ensure chargers are available for everyone, an idle fee may apply if your car remains parked at the station after charging is complete. We'll notify you via the app when your session is ending.</p>
+                        </details>
+                         <details class="p-6 border rounded-lg group">
+                            <summary class="flex items-center justify-between cursor-pointer font-semibold text-lg">How can I track my charging expenses? <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 group-open:rotate-180"></i></summary>
+                            <p class="mt-4 text-gray-600">All your charging sessions and receipts are available in your account history within the SAMIRCOEVPOWER mobile app. You can view detailed information for each session.</p>
+                        </details>
+                        <details class="p-6 border rounded-lg group">
+                            <summary class="flex items-center justify-between cursor-pointer font-semibold text-lg">How can I get a charger installed at my business? <i data-lucide="chevron-down" class="h-5 w-5 transition-transform duration-300 group-open:rotate-180"></i></summary>
+                            <p class="mt-4 text-gray-600">We'd love to partner with you! Please fill out our contact form with details about your business, and our commercial team will get in touch to discuss our hosting solutions.</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Legal Pages -->
+        <section id="terms" class="page-section hidden py-16 sm:py-24"><div class="container mx-auto px-4 prose lg:prose-xl max-w-4xl"><h1 class="text-4xl font-bold">Terms of Service</h1><p>Welcome to SAMIRCOEVPOWER. These terms and conditions outline the rules and regulations for the use of our website and charging services. By accessing this website, we assume you accept these terms and conditions. Do not continue to use SAMIRCOEVPOWER if you do not agree to all of the terms and conditions stated on this page.</p><h2>1. Accounts</h2><p>When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.</p><h2>2. Payment</h2><p>You agree to pay for all charging services you purchase through our network. All fees are in USD and are non-refundable except as required by law. We may use a third-party payment processor to bill you through a payment account linked to your account.</p><h2>3. Intellectual Property</h2><p>The Service and its original content, features, and functionality are and will remain the exclusive property of SAMIRCOEVPOWER and its licensors. Our trademarks may not be used in connection with any product or service without the prior written consent of SAMIRCOEVPOWER.</p><h2>4. Limitation Of Liability</h2><p>In no event shall SAMIRCOEVPOWER, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p></div></section>
+        <section id="privacy" class="page-section hidden py-16 sm:py-24"><div class="container mx-auto px-4 prose lg:prose-xl max-w-4xl"><h1 class="text-4xl font-bold">Privacy Policy</h1><p>Your privacy is important to us. It is SAMIRCOEVPOWER's policy to respect your privacy regarding any information we may collect from you across our website and other sites we own and operate.</p><h2>1. Information We Collect</h2><p>We may collect personal information such as your name, email address, phone number, payment information, and vehicle information when you register for an account or use our services. We also collect data about your charging sessions, including location, duration, and energy consumed.</p><h2>2. How We Use Your Information</h2><p>We use the information we collect to operate and maintain our services, process transactions, communicate with you, and improve your user experience. We may also use this information for security, fraud prevention, and to comply with legal obligations.</p><h2>3. Data Security</h2><p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable.</p><h2>4. Your Rights</h2><p>You have the right to access, update, or delete the information we have on you. Whenever made possible, you can access, update, or request deletion of your Personal Data directly within your account settings section. If you are unable to perform these actions yourself, please contact us to assist you.</p></div></section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-dark-navy text-white">
+        <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-sm font-semibold tracking-wider uppercase">Quick Links</h3>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="#home" class="page-link text-base text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#stations" class="page-link text-base text-gray-400 hover:text-white">Stations</a></li>
+                        <li><a href="#pricing" class="page-link text-base text-gray-400 hover:text-white">Pricing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold tracking-wider uppercase">Company</h3>
+                    <ul class="mt-4 space-y-2">
+                         <li><a href="#about" class="page-link text-base text-gray-400 hover:text-white">About Us</a></li>
+                         <li><a href="#contact" class="page-link text-base text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold tracking-wider uppercase">Legal</h3>
+                    <ul class="mt-4 space-y-2">
+                         <li><a href="#terms" class="page-link text-base text-gray-400 hover:text-white">Terms of Service</a></li>
+                         <li><a href="#privacy" class="page-link text-base text-gray-400 hover:text-white">Privacy Policy</a></li>
+                         <li><a href="#faq" class="page-link text-base text-gray-400 hover:text-white">FAQ</a></li>
+                    </ul>
+                </div>
+                 <div class="text-center md:text-left">
+                     <a href="#home" class="page-link flex items-center justify-center md:justify-start">
+                        <span class="text-xl font-bold font-logo">SAMIRCO<span class="text-primary-blue">EVPOWER</span></span>
+                    </a>
+                    <p class="mt-4 text-base text-gray-400">&copy; 2025 SamirCoEvPower. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+
+            const pageSections = document.querySelectorAll('.page-section');
+            const pageLinks = document.querySelectorAll('.page-link');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            let map;
+            let mapInitialized = false;
+            
+            const updateActiveNavLink = (pageId) => {
+                navLinks.forEach(link => {
+                    link.classList.remove('text-primary-blue', 'font-bold');
+                    link.classList.add('text-gray-600', 'font-medium');
+                    if(link.getAttribute('href') === `#${pageId}`) {
+                        link.classList.add('text-primary-blue', 'font-bold');
+                        link.classList.remove('text-gray-600', 'font-medium');
+                    }
+                });
+            };
+
+            const showPage = (pageId) => {
+                pageSections.forEach(section => {
+                    section.classList.add('hidden');
+                });
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.remove('hidden');
+                    window.scrollTo(0, 0);
+
+                    if (pageId === 'stations') {
+                        if (!mapInitialized) {
+                            initMap();
+                        } else {
+                            // This is the fix: ensures map resizes correctly when tab is revisited
+                            setTimeout(() => map.invalidateSize(), 0);
+                        }
+                    }
+                }
+                
+                updateActiveNavLink(pageId);
+                mobileMenu.classList.add('hidden');
+            };
+
+            pageLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        const pageId = href.substring(1);
+                        showPage(pageId);
+                        history.pushState(null, null, `#${pageId}`);
+                    }
+                });
+            });
+
+            // Handle browser back/forward
+            window.addEventListener('popstate', () => {
+                const pageId = window.location.hash.substring(1) || 'home';
+                showPage(pageId);
+            });
+
+            // Show initial page based on URL hash, otherwise default to home
+            const initialPageId = window.location.hash.substring(1);
+            if (initialPageId && document.getElementById(initialPageId)) {
+                showPage(initialPageId);
+            } else {
+                showPage('home');
+            }
+
+            // Mobile menu toggle
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Contact Form
+            const contactForm = document.getElementById('contact-form');
+            const formStatus = document.getElementById('form-status');
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                formStatus.textContent = 'Sending...';
+                formStatus.className = 'text-gray-600';
+
+                setTimeout(() => {
+                    formStatus.textContent = 'Thank you! Your message has been sent.';
+                    formStatus.className = 'text-primary-blue';
+                    contactForm.reset();
+                    setTimeout(() => { formStatus.textContent = ''; }, 5000);
+                }, 1000);
+            });
+
+            // Map & Stations Logic
+            function initMap() {
+                if (!document.getElementById('map')) return;
+
+                mapInitialized = true;
+                map = L.map('map').setView([45.5231, -122.6765], 11); // Centered on Portland, OR
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                const stations = [
+                    { name: 'Downtown Portland Power Hub', address: '100 SW Main St, Portland, OR', connectors: 'CCS, CHAdeMO', price: '$0.45/kWh', availability: 'Available', lat: 45.5165, lng: -122.6733 },
+                    { name: 'PDX Airport Charging', address: '7000 NE Airport Way, Portland, OR', connectors: 'CCS, Type 2', price: '$0.48/kWh', availability: 'In Use', lat: 45.5888, lng: -122.5931 },
+                    { name: 'Vancouver Waterfront Station', address: '101 E Waterfront Way, Vancouver, WA', connectors: 'CCS', price: '$0.45/kWh', availability: 'Available', lat: 45.6213, lng: -122.6685 },
+                    { name: 'Beaverton Town Square', address: '11700 SW Beaverton Hillsdale Hwy, Beaverton, OR', connectors: 'CHAdeMO, Type 2', price: '$0.43/kWh', availability: 'Offline', lat: 45.4856, lng: -122.7983 },
+                ];
+
+                const stationList = document.getElementById('station-list');
+                stationList.innerHTML = '';
+
+                stations.forEach(station => {
+                    const marker = L.marker([station.lat, station.lng]).addTo(map);
+                    marker.bindPopup(`<b>${station.name}</b><br>${station.address}`);
+
+                    const availabilityColor = station.availability === 'Available' ? 'text-blue-600' : (station.availability === 'In Use' ? 'text-yellow-600' : 'text-red-600');
+                    const listItem = document.createElement('div');
+                    listItem.className = 'p-4 border rounded-lg hover:bg-gray-100 cursor-pointer station-list-item';
+                    listItem.dataset.lat = station.lat;
+                    listItem.dataset.lng = station.lng;
+                    listItem.innerHTML = `
+                        <h3 class="font-bold">${station.name}</h3>
+                        <p class="text-sm text-gray-600">${station.address}</p>
+                        <div class="text-sm mt-2">
+                            <p><strong>Connectors:</strong> ${station.connectors}</p>
+                            <p><strong>Price:</strong> ${station.price}</p>
+                            <p><strong>Status:</strong> <span class="font-semibold ${availabilityColor}">${station.availability}</span></p>
+                        </div>`;
+                    stationList.appendChild(listItem);
+                });
+                
+                document.querySelectorAll('.station-list-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const lat = parseFloat(this.dataset.lat);
+                        const lng = parseFloat(this.dataset.lng);
+                        map.setView([lat, lng], 15);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
