@@ -216,16 +216,17 @@
                     <div>
                         <h1 class="text-4xl font-extrabold text-dark-navy sm:text-5xl">About SAMIRCOEVPOWER</h1>
                         <p class="mt-4 text-xl text-gray-500">Our mission is to accelerate the transition to sustainable transportation.</p>
-                        <p class="mt-6 text-gray-600">Founded in 2025, SAMIRCOEVPOWER was born from a passion for technology and a commitment to the planet. We believe that driving an electric vehicle should be easy and accessible. That's why we're building a future where you can power up wherever you live, work, and play, all while using 100% renewable energy.</p>
+                        <p class="mt-6 text-gray-600">Founded in 2022, SAMIRCOEVPOWER was born from a passion for technology and a commitment to the planet. We believe that driving an electric vehicle should be easy and accessible. That's why we're building a future where you can power up wherever you live, work, and play, all while using 100% renewable energy.</p>
                     </div>
                     <div class="mt-10 lg:mt-0">
-                        <img src="https://images2.imgbox.com/c8/ae/Em4niRaw_o.jpeg" alt="SamirCoEvPower charging station" class="rounded-lg shadow-xl">
+                        <img src="https://images.unsplash.com/photo-1508898578281-774ac48935f1?q=80&w=1974&auto=format&fit=crop" onerror="this.onerror=null;this.src='https://placehold.co/600x400/2563EB/white?text=Clean+Energy';" alt="Wind turbines powering a clean future" class="rounded-lg shadow-xl">
                     </div>
                 </div>
                  <!-- A Message from our Founder Section -->
                 <div class="mt-24 bg-white p-8 md:p-12 rounded-2xl shadow-lg border">
                     <div class="md:grid md:grid-cols-2 md:gap-12 md:items-center">
                         <div class="md:col-span-1">
+                            <!-- THE FINAL, CORRECT IMAGE LINK -->
                             <img class="rounded-lg shadow-xl w-full h-auto object-cover" src="https://images2.imgbox.com/75/73/ZqxPfteo_o.png" alt="Samir Ibrahim, CEO of SamirCoEvPower" />
                         </div>
                         <div class="mt-8 md:mt-0 md:col-span-1">
@@ -248,7 +249,9 @@
                     <p class="mt-4 text-lg text-gray-500">We'd love to hear from you. Whether you're a driver or a business looking to partner, send us a message.</p>
                 </div>
                 <div class="mt-12 max-w-xl mx-auto">
-                    <form id="contact-form" class="space-y-6">
+                    <!-- Netlify Form Setup (Standard HTML) -->
+                    <form id="contact-form" class="space-y-6" name="contact" method="POST" data-netlify="true">
+                        <input type="hidden" name="form-name" value="contact" />
                         <!-- Form fields -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div><input type="text" name="name" id="name" required class="block w-full rounded-md border-gray-300 shadow-sm p-3" placeholder="Full Name"></div>
@@ -256,7 +259,6 @@
                         </div>
                         <div><textarea name="message" id="message" rows="4" required class="block w-full rounded-md border-gray-300 shadow-sm p-3" placeholder="Your Message"></textarea></div>
                         <div><button type="submit" class="w-full py-3 px-4 rounded-md shadow-sm text-white bg-primary-blue hover:bg-opacity-90">Send Message</button></div>
-                        <p id="form-status" class="text-center"></p>
                     </form>
                 </div>
                 <div class="mt-16 text-center text-gray-600">
@@ -425,22 +427,6 @@
                 mobileMenu.classList.toggle('hidden');
             });
 
-            // Contact Form
-            const contactForm = document.getElementById('contact-form');
-            const formStatus = document.getElementById('form-status');
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                formStatus.textContent = 'Sending...';
-                formStatus.className = 'text-gray-600';
-
-                setTimeout(() => {
-                    formStatus.textContent = 'Thank you! Your message has been sent.';
-                    formStatus.className = 'text-primary-blue';
-                    contactForm.reset();
-                    setTimeout(() => { formStatus.textContent = ''; }, 5000);
-                }, 1000);
-            });
-
             // Map & Stations Logic
             function initMap() {
                 if (!document.getElementById('map')) return;
@@ -494,4 +480,3 @@
     </script>
 </body>
 </html>
-
